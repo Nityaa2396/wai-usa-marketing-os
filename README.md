@@ -4,11 +4,11 @@ AI-powered marketing operations system for Women in AI USA. Built on Claude (Ant
 
 ## Modules
 
-| Module | Status | Description |
-|--------|--------|-------------|
-| Campaign Intake & Brief Builder | ✅ Live | Turn campaign inputs into a structured brief + DOCX |
-| Partnership Copilot | 🔜 Coming Soon | Turn a partner profile into outreach strategy + email |
-| Event-to-Impact Agent | 🔜 Coming Soon | Turn event data into a sponsor-ready impact report |
+| Module                          | Status         | Description                                           |
+| ------------------------------- | -------------- | ----------------------------------------------------- |
+| Campaign Intake & Brief Builder | ✅ Live        | Turn campaign inputs into a structured brief + DOCX   |
+| Partnership Copilot             | 🔜 Coming Soon | Turn a partner profile into outreach strategy + email |
+| Event-to-Impact Agent           | 🔜 Coming Soon | Turn event data into a sponsor-ready impact report    |
 
 ---
 
@@ -61,6 +61,7 @@ wai-usa-marketing-os/
 ---
 
 ## Stack
+
 - Python + Streamlit
 - Anthropic API (Claude)
 - python-docx (DOCX generation)

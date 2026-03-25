@@ -1,11 +1,23 @@
 import anthropic
+import streamlit as st
 from brand_voice import BRAND_VOICE_FINGERPRINT
 
+
+def get_client():
+    """Get Anthropic client using secrets.toml or environment variable."""
+    try:
+        api_key = st.secrets["ANTHROPIC_API_KEY"]
+    except Exception:
+        import os
+        api_key = os.environ.get("ANTHROPIC_API_KEY", "")
+    if not api_key:
+        raise ValueError("Anthropic API key not found. Add it to .streamlit/secrets.toml")
+    return anthropic.Anthropic(api_key=api_key)
+
+
 def generate_brief(campaign_data: dict) -> str:
-    """Generate a structured campaign brief using Claude + WAI USA brand voice."""
-    
-    client = anthropic.Anthropic()
-    
+    client = get_client()
+
     prompt = f"""
 You are the WAI USA Marketing Intelligence system. Generate a complete, structured campaign brief based on the intake data below.
 
@@ -38,7 +50,7 @@ Who we're reaching, what they care about, and what motivates them to act.
 3-4 core messages, each as a single punchy line. These should feel like copy hooks.
 
 **5. CHANNEL STRATEGY**
-For each selected channel, write 1-2 sentences on how we use it specifically for this campaign (tone, content type, frequency if relevant).
+For each selected channel, write 1-2 sentences on how we use it specifically for this campaign.
 
 **6. CONTENT PILLARS**
 3 content pillars for this campaign. Each: pillar name + 1-sentence description + 1 example content idea.
@@ -52,10 +64,10 @@ For each selected channel, write 1-2 sentences on how we use it specifically for
 **9. TIMELINE & MILESTONES**
 Break the campaign timeline into phases with key milestones. Be specific to the dates/duration provided.
 
-**10. APPROVAL NOTES FOR SUPARNA**
-2-3 bullet points flagging any decisions, approvals, or inputs needed from leadership before execution begins.
+**10. APPROVAL NOTES FOR LEADERSHIP**
+2-3 bullet points flagging any decisions, approvals, or inputs needed from leadership before execution begins. Do not address any specific person by name.
 
-Write in WAI USA voice throughout. Be specific, not generic. This brief should be ready to hand to Suparna for review.
+Write in WAI USA voice throughout. Be specific, not generic. This brief should be ready for leadership review before execution.
 """
 
     message = client.messages.create(
@@ -63,37 +75,34 @@ Write in WAI USA voice throughout. Be specific, not generic. This brief should b
         max_tokens=2500,
         messages=[{"role": "user", "content": prompt}]
     )
-    
+
     return message.content[0].text
 
 
 def generate_docx(campaign_data: dict, brief_text: str) -> bytes:
-    """Generate a downloadable DOCX of the campaign brief."""
     from docx import Document
     from docx.shared import Pt, RGBColor, Inches
     from docx.enum.text import WD_ALIGN_PARAGRAPH
     import io
 
     doc = Document()
-
-    # Page setup
     section = doc.sections[0]
-    section.page_width = 12240  # 8.5 inches
-    section.page_height = 15840  # 11 inches
+    section.page_width = 12240
+    section.page_height = 15840
     section.left_margin = Inches(1)
     section.right_margin = Inches(1)
     section.top_margin = Inches(1)
     section.bottom_margin = Inches(1)
 
-    # Title
     title = doc.add_heading(f"Campaign Brief: {campaign_data.get('campaign_name', 'Untitled')}", 0)
     title.alignment = WD_ALIGN_PARAGRAPH.CENTER
     for run in title.runs:
-        run.font.color.rgb = RGBColor(0x0D, 0x47, 0x6B)  # WAI navy
+        run.font.color.rgb = RGBColor(0x0D, 0x47, 0x6B)
         run.font.size = Pt(20)
 
-    # Subtitle
-    sub = doc.add_paragraph(f"WAI USA Marketing Operating System  |  Campaign Type: {campaign_data.get('campaign_type', 'N/A')}  |  {campaign_data.get('timeline', 'TBD')}")
+    sub = doc.add_paragraph(
+        f"WAI USA Marketing OS  |  {campaign_data.get('campaign_type', 'N/A')}  |  {campaign_data.get('timeline', 'TBD')}"
+    )
     sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
     for run in sub.runs:
         run.font.size = Pt(10)
@@ -101,30 +110,22 @@ def generate_docx(campaign_data: dict, brief_text: str) -> bytes:
 
     doc.add_paragraph()
 
-    # Parse and write brief sections
-    lines = brief_text.split('\n')
-    for line in lines:
+    for line in brief_text.split('\n'):
         line = line.strip()
         if not line:
             doc.add_paragraph()
             continue
-        
-        # Section headers (bold + larger)
-        if line.startswith('**') and line.endswith('**') and any(char.isdigit() for char in line[:5]):
-            clean = line.strip('*').strip()
-            h = doc.add_heading(clean, level=2)
+        if line.startswith('**') and line.endswith('**') and any(c.isdigit() for c in line[:5]):
+            h = doc.add_heading(line.strip('*').strip(), level=2)
             for run in h.runs:
                 run.font.color.rgb = RGBColor(0x0D, 0x47, 0x6B)
-        # Bullet points
         elif line.startswith('- ') or line.startswith('• '):
             p = doc.add_paragraph(line[2:], style='List Bullet')
             for run in p.runs:
                 run.font.size = Pt(11)
-        # Bold inline
         elif '**' in line:
             p = doc.add_paragraph()
-            parts = line.split('**')
-            for i, part in enumerate(parts):
+            for i, part in enumerate(line.split('**')):
                 if not part:
                     continue
                 run = p.add_run(part)
@@ -135,16 +136,16 @@ def generate_docx(campaign_data: dict, brief_text: str) -> bytes:
             for run in p.runs:
                 run.font.size = Pt(11)
 
-    # Footer note
     doc.add_paragraph()
-    footer_p = doc.add_paragraph("Generated by WAI USA Marketing Operating System  |  Requires Suparna approval before execution")
+    footer_p = doc.add_paragraph(
+        "Generated by WAI USA Marketing OS  |  Requires leadership approval before execution"
+    )
     footer_p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     for run in footer_p.runs:
         run.font.size = Pt(9)
         run.font.color.rgb = RGBColor(0x99, 0x99, 0x99)
         run.font.italic = True
 
-    # Save to bytes
     buffer = io.BytesIO()
     doc.save(buffer)
     return buffer.getvalue()
