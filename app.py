@@ -8,236 +8,135 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap');
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; background: #0d1b2e; }
-.block-container { padding: 0 !important; max-width: 100% !important; }
+html, body, [class*="css"] {
+    background-color: #13223d !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+.block-container {
+    padding: 2rem 3rem !important;
+    max-width: 100% !important;
+}
 #MainMenu, footer, header { visibility: hidden; }
 section[data-testid="stSidebar"] { display: none; }
 
-/* ── Page wrapper ── */
-.os-page {
-    min-height: 100vh;
-    background: #0d1b2e;
-    background-image:
-        radial-gradient(ellipse 80% 60% at 50% -10%, rgba(255,193,0,0.08) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 40% at 90% 80%, rgba(21,34,71,0.8) 0%, transparent 70%);
-    padding: 0;
-}
-
-/* ── Nav ── */
-.os-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1.25rem 3rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    background: rgba(13,27,46,0.9);
-    backdrop-filter: blur(12px);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-.os-nav-logo {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #ffc100;
-}
-.os-nav-tag {
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: rgba(255,255,255,0.35);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}
-
-/* ── Hero ── */
-.os-hero {
-    text-align: center;
-    padding: 5rem 2rem 4rem;
-}
-.os-hero-eyebrow {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: #ffc100;
-    margin-bottom: 1.25rem;
-}
-.os-hero-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(2.5rem, 5vw, 4rem);
-    font-weight: 800;
-    color: #ffffff;
-    line-height: 1.1;
-    margin-bottom: 1.25rem;
-    letter-spacing: -0.02em;
-}
-.os-hero-title span { color: #ffc100; }
-.os-hero-sub {
-    font-size: 1rem;
-    color: rgba(255,255,255,0.45);
-    font-weight: 400;
-    max-width: 480px;
-    margin: 0 auto 3rem;
-    line-height: 1.6;
-}
-
-/* ── Module cards ── */
-.modules-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.25rem;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 0 2rem 2rem;
-}
-.module-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    padding: 1.75rem;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-}
-.module-card.active {
-    background: rgba(255,193,0,0.04);
-    border-color: rgba(255,193,0,0.25);
-}
-.module-card.active::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #ffc100, rgba(255,193,0,0.3));
-}
-.module-num {
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.25);
-    margin-bottom: 1rem;
-}
-.module-card.active .module-num { color: #ffc100; }
-.module-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 0.6rem;
-    line-height: 1.3;
-}
-.module-desc {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.4);
-    line-height: 1.6;
-    margin-bottom: 1.25rem;
-}
-.module-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.35rem;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.3rem 0.7rem;
-    border-radius: 999px;
-}
-.badge-live { background: rgba(255,193,0,0.12); color: #ffc100; border: 1px solid rgba(255,193,0,0.2); }
-.badge-soon { background: rgba(255,255,255,0.05); color: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.08); }
-
-/* ── Streamlit button overrides ── */
+/* Buttons */
 div[data-testid="stButton"] > button {
-    background: #ffc100 !important;
-    color: #0d1b2e !important;
+    background-color: #ffc100 !important;
+    color: #13223d !important;
     border: none !important;
     border-radius: 8px !important;
     font-family: 'DM Sans', sans-serif !important;
-    font-size: 0.82rem !important;
     font-weight: 700 !important;
-    letter-spacing: 0.03em !important;
-    padding: 0.6rem 1.25rem !important;
+    font-size: 0.9rem !important;
+    padding: 0.65rem 1.5rem !important;
     width: 100% !important;
-    transition: all 0.15s !important;
+    transition: opacity 0.2s !important;
 }
-div[data-testid="stButton"] > button:hover {
-    background: #ffcd33 !important;
-    transform: translateY(-1px) !important;
-}
+div[data-testid="stButton"] > button:hover { opacity: 0.88 !important; }
 div[data-testid="stButton"] > button:disabled {
-    background: rgba(255,255,255,0.06) !important;
-    color: rgba(255,255,255,0.2) !important;
-    cursor: not-allowed !important;
-    transform: none !important;
-}
-
-/* ── Footer ── */
-.os-footer {
-    text-align: center;
-    padding: 2rem;
-    font-size: 0.72rem;
-    color: rgba(255,255,255,0.18);
-    letter-spacing: 0.04em;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    margin-top: 2rem;
+    background-color: rgba(255,255,255,0.08) !important;
+    color: rgba(255,255,255,0.25) !important;
 }
 </style>
+""", unsafe_allow_html=True)
 
-<div class="os-page">
-    <nav class="os-nav">
-        <span class="os-nav-logo">WAI USA Marketing OS</span>
-        <span class="os-nav-tag">AI-Powered · 3 Modules · Built on Claude</span>
-    </nav>
-
-    <div class="os-hero">
-        <div class="os-hero-eyebrow">Marketing Operating System</div>
-        <h1 class="os-hero-title">Built for <span>Women in AI</span>.<br>Powered by AI.</h1>
-        <p class="os-hero-sub">Three intelligent modules that handle campaign briefs, partnerships, and event impact — all in one place.</p>
-    </div>
-
-    <div class="modules-grid">
-        <div class="module-card active">
-            <div class="module-num">01 · Module</div>
-            <div class="module-name">Campaign Intake & Brief Builder</div>
-            <div class="module-desc">Turn campaign inputs into a full structured brief with DOCX download — ready for leadership review.</div>
-            <span class="module-badge badge-live">✦ Live</span>
-        </div>
-        <div class="module-card">
-            <div class="module-num">02 · Module</div>
-            <div class="module-name">Partnership Copilot</div>
-            <div class="module-desc">Turn a partner profile into an outreach strategy and a ready-to-send email in minutes.</div>
-            <span class="module-badge badge-soon">Coming Soon</span>
-        </div>
-        <div class="module-card">
-            <div class="module-num">03 · Module</div>
-            <div class="module-name">Event-to-Impact Agent</div>
-            <div class="module-desc">Turn event data into a formatted impact report for sponsors and leadership.</div>
-            <span class="module-badge badge-soon">Coming Soon</span>
-        </div>
-    </div>
+# ── Nav bar ────────────────────────────────────────────────────────────────────
+st.markdown("""
+<div style="display:flex;align-items:center;justify-content:space-between;
+            padding:0.75rem 0;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:3rem;">
+    <span style="font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:800;
+                 letter-spacing:0.12em;text-transform:uppercase;color:#ffc100;">
+        WAI USA Marketing OS
+    </span>
+    <span style="font-size:0.7rem;font-weight:500;letter-spacing:0.1em;
+                 text-transform:uppercase;color:rgba(255,255,255,0.3);">
+        AI-Powered · 3 Modules · Built on Claude
+    </span>
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown("<div style='max-width:340px;margin:0 auto;padding:0 2rem 1rem;'>", unsafe_allow_html=True)
-if st.button("⚡  Open Campaign Brief Builder"):
-    st.switch_page("pages/module1_campaign_brief.py")
+# ── Hero ───────────────────────────────────────────────────────────────────────
+st.markdown("""
+<div style="text-align:center;padding:2rem 0 3.5rem;">
+    <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;
+              color:#ffc100;margin-bottom:1rem;">Marketing Operating System</p>
+    <h1 style="font-family:'Syne',sans-serif;font-size:3rem;font-weight:800;
+               color:#ffffff;line-height:1.15;letter-spacing:-0.02em;margin-bottom:1rem;">
+        Built for <span style="color:#ffc100;">Women in AI</span>.<br>Powered by AI.
+    </h1>
+    <p style="font-size:1rem;color:rgba(255,255,255,0.45);max-width:480px;
+              margin:0 auto;line-height:1.65;">
+        Three intelligent modules that handle campaign briefs, partnerships,
+        and event impact — all in one place.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+# ── Module cards ───────────────────────────────────────────────────────────────
+col1, col2, col3 = st.columns(3, gap="medium")
+
+def module_card(container, num, title, desc, status, active=False):
+    border = "rgba(255,193,0,0.3)" if active else "rgba(255,255,255,0.08)"
+    bg = "rgba(255,193,0,0.04)" if active else "rgba(255,255,255,0.02)"
+    top_line = f'<div style="height:2px;background:linear-gradient(90deg,#ffc100,transparent);border-radius:2px;margin-bottom:1.25rem;"></div>' if active else '<div style="height:2px;background:transparent;margin-bottom:1.25rem;"></div>'
+    num_color = "#ffc100" if active else "rgba(255,255,255,0.2)"
+    badge_bg = "rgba(255,193,0,0.12)" if active else "rgba(255,255,255,0.05)"
+    badge_color = "#ffc100" if active else "rgba(255,255,255,0.3)"
+    badge_border = "rgba(255,193,0,0.25)" if active else "rgba(255,255,255,0.08)"
+
+    container.markdown(f"""
+    <div style="background:{bg};border:1px solid {border};border-radius:12px;
+                padding:1.75rem;min-height:200px;">
+        {top_line}
+        <p style="font-size:0.62rem;font-weight:700;letter-spacing:0.14em;
+                  text-transform:uppercase;color:{num_color};margin-bottom:0.75rem;">
+            {num}
+        </p>
+        <p style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;
+                  color:#ffffff;line-height:1.35;margin-bottom:0.6rem;">{title}</p>
+        <p style="font-size:0.8rem;color:rgba(255,255,255,0.4);
+                  line-height:1.6;margin-bottom:1.25rem;">{desc}</p>
+        <span style="display:inline-block;font-size:0.62rem;font-weight:700;
+                     letter-spacing:0.08em;text-transform:uppercase;
+                     padding:0.25rem 0.7rem;border-radius:999px;
+                     background:{badge_bg};color:{badge_color};
+                     border:1px solid {badge_border};">{status}</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+module_card(col1, "01 · Module", "Campaign Intake & Brief Builder",
+            "Turn campaign inputs into a full structured brief with DOCX download — ready for leadership review.",
+            "✦ Live", active=True)
+
+module_card(col2, "02 · Module", "Partnership Copilot",
+            "Turn a partner profile into an outreach strategy and a ready-to-send email in minutes.",
+            "Coming Soon")
+
+module_card(col3, "03 · Module", "Event-to-Impact Agent",
+            "Turn event data into a formatted impact report for sponsors and leadership.",
+            "Coming Soon")
+
+# ── Launch buttons ─────────────────────────────────────────────────────────────
+st.markdown("<div style='margin-top:2rem;'>", unsafe_allow_html=True)
+b1, b2, b3 = st.columns(3, gap="medium")
+
+with b1:
+    if st.button("⚡  Open Campaign Brief Builder", use_container_width=True):
+        st.switch_page("pages/module1_campaign_brief.py")
+with b2:
+    st.button("🔒  Partnership Copilot — Coming Soon", disabled=True, use_container_width=True)
+with b3:
+    st.button("🔒  Event-to-Impact Agent — Coming Soon", disabled=True, use_container_width=True)
+
 st.markdown("</div>", unsafe_allow_html=True)
 
-col1, col2 = st.columns(2)
-with col1:
-    st.button("🔒  Partnership Copilot — Coming Soon", disabled=True)
-with col2:
-    st.button("🔒  Event-to-Impact Agent — Coming Soon", disabled=True)
-
+# ── Footer ─────────────────────────────────────────────────────────────────────
 st.markdown("""
-<div class="os-footer">
+<div style="text-align:center;margin-top:3rem;padding-top:1.5rem;
+            border-top:1px solid rgba(255,255,255,0.06);
+            font-size:0.72rem;color:rgba(255,255,255,0.18);letter-spacing:0.04em;">
     WAI USA Marketing OS · Powered by Claude (Anthropic) · Women in AI USA
 </div>
 """, unsafe_allow_html=True)
